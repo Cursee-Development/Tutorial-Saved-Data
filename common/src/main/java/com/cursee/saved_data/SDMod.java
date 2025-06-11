@@ -7,12 +7,11 @@ import net.minecraft.server.MinecraftServer;
 public class SDMod {
 
     static MinecraftServer SERVER;
-    public static ItemUseCountData ITEM_USE_COUNTS;
 
     public static void init() {}
 
     public static void onServerStarted(MinecraftServer server) {
-        ITEM_USE_COUNTS = ItemUseCountData.fromServer(server); // to compute it for the first time if not created
+        ItemUseCountData.fromServer(server); // to compute it for the first time if not created
         if (SERVER == null) SERVER = server;
     }
 
