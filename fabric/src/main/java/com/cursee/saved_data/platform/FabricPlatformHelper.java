@@ -1,8 +1,11 @@
 package com.cursee.saved_data.platform;
 
+import com.cursee.saved_data.core.data.ItemUseCountData;
+import com.cursee.saved_data.core.network.packet.DataSyncS2CPacketFabric;
 import com.cursee.saved_data.platform.services.IPlatformHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.server.level.ServerPlayer;
 
 public class FabricPlatformHelper implements IPlatformHelper {
 
@@ -34,5 +37,10 @@ public class FabricPlatformHelper implements IPlatformHelper {
     public boolean isClientSide() {
 
         return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
+    }
+
+    @Override
+    public void sendDataSyncPacket(ServerPlayer player) {
+        DataSyncS2CPacketFabric.createAndSend(player);
     }
 }

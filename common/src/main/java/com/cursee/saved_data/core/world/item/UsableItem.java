@@ -1,6 +1,10 @@
 package com.cursee.saved_data.core.world.item;
 
+import com.cursee.saved_data.SDMod;
+import com.cursee.saved_data.SDModClient;
 import com.cursee.saved_data.core.data.ItemUseCountData;
+import com.cursee.saved_data.platform.Services;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -17,10 +21,23 @@ public class UsableItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
-        if (!level.isClientSide() && level.getServer() != null) {
-            ItemUseCountData.fromServer(level.getServer()).increment();
-            System.out.println("Count: " + ItemUseCountData.fromServer(level.getServer()).getCount());
+
+
+        if (level.isClientSide()) {
+            // the client runs faster than the player receives data from the server,
+            // so we predict the value to fake perfect synchronization
+            player.sendSystemMessage(Component.literal("Client Count Prediction: " + String.valueOf(SDModClient.synced_count + 1)));
         }
+
+        if (!level.isClientSide()) {
+
+            // saved data operations must occur server side, then be synced to the client
+            SDMod.freshData().increment();
+            player.sendSystemMessage(Component.literal("Server Count: " + SDMod.freshData().getCount()));
+
+            Services.PLATFORM.sendDataSyncPacket((ServerPlayer) player);
+        }
+
         return super.use(level, player, usedHand);
     }
 }

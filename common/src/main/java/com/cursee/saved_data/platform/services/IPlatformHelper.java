@@ -1,5 +1,8 @@
 package com.cursee.saved_data.platform.services;
 
+import com.cursee.saved_data.core.data.ItemUseCountData;
+import net.minecraft.server.level.ServerPlayer;
+
 public interface IPlatformHelper {
 
     /**
@@ -47,4 +50,6 @@ public interface IPlatformHelper {
 
         return isDevelopmentEnvironment() ? "development" : "production";
     }
+
+    void sendDataSyncPacket(ServerPlayer player);
 }
