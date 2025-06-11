@@ -7,7 +7,6 @@ import net.minecraft.server.MinecraftServer;
 public class SDMod {
 
     static MinecraftServer SERVER;
-    static int count;
 
     public static void init() {}
 
