@@ -14,6 +14,7 @@ public class SDMod {
     public static void onServerStarted(MinecraftServer server) {
         ItemUseCountData.fromServer(server); // to compute it for the first time if not created
         if (SERVER == null) SERVER = server;
+        Constants.LOG.info("SERVER was assigned.");
     }
 
     public static ItemUseCountData freshData() {
