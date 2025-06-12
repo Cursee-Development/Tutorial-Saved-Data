@@ -13,18 +13,21 @@ import java.util.function.Supplier;
 
 public class DataSyncS2CPacketForge {
 
-    public final int count;
+    public final int globalCount;
+    public final int playerCount;
 
-    public DataSyncS2CPacketForge(int count) {
-        this.count = count;
+    public DataSyncS2CPacketForge(int globalCount, int playerCount) {
+        this.globalCount = globalCount;
+        this.playerCount = playerCount;
     }
 
     public void encode(FriendlyByteBuf data) {
-        data.writeInt(this.count);
+        data.writeInt(this.globalCount);
+        data.writeInt(this.playerCount);
     }
 
     public static DataSyncS2CPacketForge decode(FriendlyByteBuf data) {
-        return new DataSyncS2CPacketForge(data.readInt());
+        return new DataSyncS2CPacketForge(data.readInt(), data.readInt());
     }
 
     public static void handle(DataSyncS2CPacketForge packet, Supplier<NetworkEvent.Context> contextSupplier) {
@@ -35,6 +38,6 @@ public class DataSyncS2CPacketForge {
     }
 
     public static void createAndSend(ServerPlayer player) {
-        SDModNetworkForge.sendToPlayer(new DataSyncS2CPacketForge(SDMod.freshData().getCount()), player);
+        SDModNetworkForge.sendToPlayer(new DataSyncS2CPacketForge(SDMod.freshData().getGlobalUseCount(), SDMod.freshData(player).getPlayerUseCount()), player);
     }
 }

@@ -9,6 +9,9 @@ import java.util.function.Supplier;
 public class DataSyncClientHandlerForge {
 
     public static void registerS2CPacketHandler(DataSyncS2CPacketForge packet, Supplier<NetworkEvent.Context> contextSupplier) {
-        contextSupplier.get().enqueueWork(() -> SDModClient.synced_count = packet.count);
+        contextSupplier.get().enqueueWork(() -> {
+            SDModClient.synced_use_count = packet.globalCount;
+            SDModClient.synced_player_use_count = packet.playerCount;
+        });
     }
 }

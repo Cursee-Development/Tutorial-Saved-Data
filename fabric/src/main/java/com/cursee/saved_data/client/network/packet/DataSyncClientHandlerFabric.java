@@ -9,6 +9,7 @@ import net.minecraft.network.FriendlyByteBuf;
 public class DataSyncClientHandlerFabric {
 
     public static void receiveOnClient(Minecraft client, ClientPacketListener handler, FriendlyByteBuf data, PacketSender responseSender) {
-        SDModClient.synced_count = data.readInt();
+        SDModClient.synced_use_count = data.readInt();
+        SDModClient.synced_player_use_count = data.readInt();
     }
 }

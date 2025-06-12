@@ -9,7 +9,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.level.ServerPlayer;
 
 public class SDModFabric implements ModInitializer {
-    
+
     @Override
     public void onInitialize() {
         SDMod.init();
@@ -19,7 +19,7 @@ public class SDModFabric implements ModInitializer {
         ServerLifecycleEvents.SERVER_STARTED.register(SDMod::onServerStarted);
         ServerEntityEvents.ENTITY_LOAD.register((entity, serverLevel) -> {
             if (!(entity instanceof ServerPlayer player)) return;
-            DataSyncS2CPacketFabric.createAndSend(player);
+            SDMod.onPlayerJoinedServer(player);
         });
     }
 }

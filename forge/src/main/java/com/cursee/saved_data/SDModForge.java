@@ -30,7 +30,7 @@ public class SDModForge {
         MinecraftForge.EVENT_BUS.addListener((Consumer<ServerStartedEvent>) event -> SDMod.onServerStarted(event.getServer()));
         MinecraftForge.EVENT_BUS.addListener((Consumer<EntityJoinLevelEvent>) event -> {
             if (!(event.getEntity() instanceof ServerPlayer player)) return;
-            DataSyncS2CPacketForge.createAndSend(player);
+            SDMod.onPlayerJoinedServer(player);
         });
     }
 
