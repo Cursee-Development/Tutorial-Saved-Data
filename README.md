@@ -1,6 +1,6 @@
 # Tutorial: Saved Data
 
-This repository shows a minimalistic implementation of SavedData for mods based on MultiLoader-Template. 
+This repository shows a simple implementation of Minecraft's SavedData, and synchronizing that SavedData to clients for mods based on MultiLoader-Template. 
 
 ---
 
