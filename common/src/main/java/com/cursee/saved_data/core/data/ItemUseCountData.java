@@ -10,11 +10,23 @@ import net.minecraft.world.level.saveddata.SavedData;
 import java.util.HashMap;
 import java.util.UUID;
 
+/**
+ * Stores global and per-player item use counts using Minecraft's SavedData system.
+ * This data is persisted per world and synchronized from the server side.
+ */
 public class ItemUseCountData extends SavedData {
 
+    /** The total number of times the tracked item has been used globally. */
     int globalUseCount = 0;
+
+    /** A map of a player's UUID to their use data. */
     public HashMap<UUID, PlayerItemUseCountData> playerDataFromUUIDMap = new HashMap<>();
 
+    /**
+     * Creates a new, empty instance of ItemUseCountData.
+     * <p></p>
+     * This could also be a canonical constructor, we can verify our beginning values here.
+     */
     private static ItemUseCountData createFunction() {
         ItemUseCountData data = new ItemUseCountData();
         data.globalUseCount = 0;
@@ -22,6 +34,9 @@ public class ItemUseCountData extends SavedData {
         return data;
     }
 
+    /**
+     * Serialize this data into an NBT tag.
+     */
     @Override
     public CompoundTag save(CompoundTag tag) {
 
@@ -38,6 +53,9 @@ public class ItemUseCountData extends SavedData {
         return tag;
     }
 
+    /**
+     * Deserialize this data from the given NBT tag.
+     */
     private static ItemUseCountData loadFunction(CompoundTag tag) {
         ItemUseCountData data = new ItemUseCountData();
 
@@ -54,6 +72,14 @@ public class ItemUseCountData extends SavedData {
         return data;
     }
 
+    /**
+     * Get or create data for a server.
+     * <p> </p>
+     * Adapted from Fabric's PersistentState tutorial:
+     * <p> </p>
+     * "If the data is not marked dirty before Minecraft closes, 'save' won't be called and therefore nothing will be saved.
+     * There is a 'cost' is when the file is written to the disk and no actual change to any part of the mod data was present (which is rare)."
+     */
     public static ItemUseCountData fromServer(MinecraftServer server) {
         ServerLevel level = server.getLevel(Level.OVERWORLD);
         ItemUseCountData data = level.getDataStorage().computeIfAbsent(ItemUseCountData::loadFunction, ItemUseCountData::createFunction, "saved_data_mod_data");
@@ -61,9 +87,10 @@ public class ItemUseCountData extends SavedData {
         return data;
     }
 
+    /**
+     * Get or create data for a player from their UUID
+     */
     public static PlayerItemUseCountData fromPlayer(MinecraftServer server, ServerPlayer player) {
-
-        // get the player's data by their uuid, or make new data attached to their uuid
         return fromServer(server).playerDataFromUUIDMap.computeIfAbsent(player.getUUID(), uuid -> new PlayerItemUseCountData());
     }
 
@@ -75,6 +102,9 @@ public class ItemUseCountData extends SavedData {
         return globalUseCount;
     }
 
+    /**
+     * For the data specific to player instances.
+     */
     public static class PlayerItemUseCountData {
 
         int playerUseCount = 0;
